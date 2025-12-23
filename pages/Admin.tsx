@@ -21,6 +21,26 @@ export default function Admin() {
   const [maxGuests, setMaxGuests] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
+  const [withdrawing, setWithdrawing] = useState(false);
+  const handleWithdraw = async () => {
+    if (!account) {
+      alert("Please connect wallet");
+      return;
+    }
+
+    try {
+      setWithdrawing(true);
+
+      const res = await axios.post(`${BACKEND_URL}/withdraw`);
+
+      alert(`Withdraw success!\nTx: ${res.data.hash}`);
+    } catch (err: any) {
+      console.error("Withdraw failed:", err);
+      alert(err.response?.data?.error || err.message || "Withdraw failed");
+    } finally {
+      setWithdrawing(false);
+    }
+  };
 
   const fetchRooms = async () => {
     setRoomsLoading(true);
@@ -118,6 +138,31 @@ export default function Admin() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
+      <div className="bg-white shadow rounded-lg border border-slate-200 p-6 mb-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-800">
+              Contract Funds
+            </h2>
+            <p className="text-sm text-slate-500">
+              Withdraw all ETH from smart contract
+            </p>
+          </div>
+
+          <button
+            onClick={handleWithdraw}
+            disabled={withdrawing}
+            className="flex items-center gap-2 px-4 py-2 rounded-md text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
+          >
+            {withdrawing ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <>Withdraw ETH</>
+            )}
+          </button>
+        </div>
+      </div>
+
       <div className="flex items-center gap-3 mb-8">
         <ShieldCheck className="h-8 w-8 text-primary" />
         <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
@@ -270,7 +315,7 @@ export default function Admin() {
         </table>
       </div>
 
-      <div className="bg-white shadow rounded-lg border border-slate-200 p-6 mb-8">
+      <div className="mt-6 bg-white shadow rounded-lg border border-slate-200 p-6 mb-8">
         <div className="flex items-center gap-2 mb-6">
           <Calendar className="h-5 w-5 text-primary" />
           <h2 className="text-xl font-semibold text-slate-800">

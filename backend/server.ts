@@ -210,7 +210,6 @@ const ABI = [
 const provider = new ethers.JsonRpcProvider(RPC_URL);
 let wallet: ethers.Wallet | null = null;
 let contract: ethers.Contract;
-
 async function ensureDbReady() {
   await dbReady;
 }
