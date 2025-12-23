@@ -1,0 +1,4 @@
+{
+  "name": "EtherStay Hotel DApp",
+  "description": "A decentralized hotel booking application on Sepolia testnet. Features a Node.js backend for API interactions and a React frontend for wallet-based bookings."
+}
